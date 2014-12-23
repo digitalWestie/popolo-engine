@@ -1,27 +1,13 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Popolo::Membership do
-  [:organization_id, :person_id].each do |attribute|
-    it {should validate_presence_of attribute}
-  end
+module Popolo
+  RSpec.describe Membership do
+    [:organization_id, :person_id].each do |attribute|
+      it {should validate_presence_of attribute}
+    end
 
-  [:start_date, :end_date].each do |attribute|
-    it {
-      should validate_format_of(attribute).
-        # 4.1.2.2 Basic format
-        not_to_allow('20041231').
-        # 4.1.2.2 Extended format
-        to_allow('2004-12-31').
-        # 4.1.2.3 a) A specific month
-        to_allow('2004-01').
-        # 4.1.2.3 b) A specific year
-        to_allow('2004').
-        # 4.1.2.3 c) A specific century
-        not_to_allow('20').
-        # Avoid confusion with YYMMDD
-        not_to_allow('200401').
-        # Date and time of day.
-        not_to_allow('2004-12-31T00:00:00Z')
-    }
+    [:start_date, :end_date].each do |attribute|
+      it_behaves_like 'a model with a date attribute', attribute
+    end
   end
 end

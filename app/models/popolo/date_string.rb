@@ -8,11 +8,11 @@ module Popolo
 
     class << self
       def demongoize(object)
-        object.nil? ? nil : Date.parse(object)
+        object.blank? ? nil : Date.parse(object) rescue object
       end
 
       def mongoize(object)
-        object.nil? ? nil : object.to_s
+        object.blank? ? nil : object.to_s
       end
 
       def evolve(object)

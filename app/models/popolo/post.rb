@@ -3,10 +3,11 @@ module Popolo
   class Post
     include Mongoid::Document
     include Mongoid::Timestamps
-    include DateHandler
 
     store_in Popolo.storage_options_per_class.fetch(:Post, Popolo.storage_options)
 
+    # The geographic area to which the post is related.
+    belongs_to :area, index: true, class_name: 'Popolo::Area'
     # The organization in which the post is held.
     belongs_to :organization, index: true, class_name: 'Popolo::Organization'
     # The memberships through which people hold the post in the organization.
@@ -15,7 +16,7 @@ module Popolo
     embeds_many :contact_details, as: :contactable, class_name: 'Popolo::ContactDetail'
     # URLs to documents about the post.
     embeds_many :links, as: :linkable, class_name: 'Popolo::Link'
-    # URLs to source documents about the post.
+    # URLs to documents from which the post is derived.
     embeds_many :sources, as: :linkable, class_name: 'Popolo::Link'
 
     # A label describing the post.
@@ -23,22 +24,16 @@ module Popolo
     # The function that the holder of the post fulfills.
     field :role, type: String
     # The date on which the post was created.
-    field :start_date, type: Popolo::DateString
+    field :start_date, type: DateString
     # The date on which the post was eliminated.
-    field :end_date, type: Popolo::DateString
+    field :end_date, type: DateString
 
     validates_presence_of :organization_id
-
-    validate :date_formats
+    validates_format_of :start_date, with: DATE_STRING_FORMAT, allow_blank: true
+    validates_format_of :end_date, with: DATE_STRING_FORMAT, allow_blank: true
 
     def to_s
       label
     end
-
-    def date_formats
-      validate_date_for(:start_date)
-      validate_date_for(:end_date)
-    end
-
   end
 end

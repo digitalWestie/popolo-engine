@@ -1,30 +1,28 @@
 module Popolo
-  # A group with a common purpose or reason for existence that goes beyond the
-  # set of people belonging to it.
+  # A voter's vote in a vote event.
   class Vote
     include Mongoid::Document
-    include Mongoid::Timestamps
 
     store_in Popolo.storage_options_per_class.fetch(:Vote, Popolo.storage_options)
 
-    # The motion being decided
+    # A vote event.
     belongs_to :vote_event, class_name: 'Popolo::VoteEvent'
-    # The organization/person who voted
-    field :voter_id, type: String #TODO: this should be polymorphic as person or organisation can vote
-    # The option chosen by the voter, whether actively or passively - options recommended: yes, no, abstain, absent, not voting, paired
-    field :option, type: String
-    # The voters primary political group
+    # The person or organization that is voting.
+    belongs_to :voter, polymorphic: true
+    # The voter's primary political group.
     belongs_to :group, class_name: 'Popolo::Organization'
-    # The voters role in the event e.g. 'chair'
-    field :role, type: String
-    # The weight of the voter's vote
-    field :weight, type: Float, :default => 1.0
-    # The person with whom the voter is paired
+    # The person with whom the voter is paired.
     belongs_to :pair, class_name: 'Popolo::Person'
-    belongs_to :vote_event, class_name: 'Popolo::VoteEvent'
+
+    # The option chosen by the voter, whether actively or passively.
+    field :option, type: String
+    # The voter's role in the event.
+    field :role, type: String
+    # The weight of the voter's vote.
+    field :weight, type: Float, default: 1.0
 
     def to_s
-      "#{option} from #{voter_id}"
+      "#{voter.name}: #{option}"
     end
   end
 end

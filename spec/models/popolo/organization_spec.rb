@@ -1,5 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
+<<<<<<< HEAD
 describe Popolo::Organization do
 
   it "should be able to save two siblings" do
@@ -39,6 +40,12 @@ describe Popolo::Organization do
     it "should allow 2011-12-30" do
       subject.founding_date = '2011-12-30'
       subject.valid?.should == true
+=======
+module Popolo
+  RSpec.describe Organization do
+    [:founding_date, :dissolution_date].each do |attribute|
+      it_behaves_like 'a model with a date attribute', attribute
+>>>>>>> 1ef5e55070f9f25a4c40b3c0deb0f978ff27372a
     end
   end
 
