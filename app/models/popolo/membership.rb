@@ -37,7 +37,8 @@ module Popolo
     validates_format_of :end_date, with: DATE_STRING_FORMAT, allow_blank: true
 
     def to_s(options = {})
-      label || case options[:format]
+      label unless options[:format].present?
+      case options[:format]
       when :person
         person.to_s
       when :organization
