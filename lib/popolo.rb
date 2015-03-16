@@ -27,4 +27,14 @@ module Popolo
   @@storage_options_per_class = {}
 
   DATE_STRING_FORMAT = /\A\d{4}(-\d{2}){0,2}\z/
+
+  class Engine < ::Rails::Engine
+    isolate_namespace Popolo
+ 
+    config.to_prepare do
+      Dir.glob(Rails.root + "app/decorators/**/*_decorator*.rb").each do |c|
+        require_dependency(c)
+      end
+    end
+  end
 end
